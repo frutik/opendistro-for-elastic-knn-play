@@ -9,10 +9,6 @@ elastic:
     - "discovery.type=single-node"    
   volumes:
     - "./knn:/usr/share/elasticsearch/plugins/opendistro_knn/"
-#  volumes_from:
-#    - app
-#  links:
-#    - app:app
 kibana:
   image: amazon/opendistro-for-elasticsearch-kibana:1.2.1
   ports:
@@ -24,4 +20,4 @@ kibana:
     ELASTICSEARCH_HOSTS: https://elastic:9200
   links:
     - elastic:elastic
-        
+    
