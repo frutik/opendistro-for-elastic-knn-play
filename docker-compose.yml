@@ -1,23 +1,31 @@
+version: '3.1'
 
-elastic:
-  restart: always
-  image: amazon/opendistro-for-elasticsearch:1.2.1
-  ports:
-    - "9200:9200"
-    - "9600:9600"
-  environment:
-    - "discovery.type=single-node"    
-  volumes:
-    - "./knn:/usr/share/elasticsearch/plugins/opendistro_knn/"
-kibana:
-  image: amazon/opendistro-for-elasticsearch-kibana:1.2.1
-  ports:
-    - 5601:5601
-  expose:
-    - "5601"
-  environment:
-    ELASTICSEARCH_URL: http://elastic:9200
-    ELASTICSEARCH_HOSTS: https://elastic:9200
-  links:
-    - elastic:elastic
+services:
+  elastic:
+    restart: always
+    image: amazon/opendistro-for-elasticsearch:1.2.1
+    ports:
+      - "9200:9200"
+#      - "9600:9600"
+    environment:
+      - "discovery.type=single-node"
+    volumes:
+      - "./entrypoint.sh:/entrypoint.sh"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    entrypoint: "sh /entrypoint.sh"
+
+  kibana:
+    image: amazon/opendistro-for-elasticsearch-kibana:1.2.1
+    ports:
+      - 5601:5601
+    expose:
+      - "5601"
+    environment:
+      ELASTICSEARCH_URL: http://elastic:9200
+      ELASTICSEARCH_HOSTS: https://elastic:9200
+    links:
+      - elastic:elastic
     
